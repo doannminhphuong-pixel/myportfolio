@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Doan Minh Phuong — Portfolio</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Courier+Prime:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Courier+Prime:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/></noscript>
+
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
+
+<style>
+  :root {
+    --black: #0a0a0a;
+    --film: #111010;
+    --cream: #f0e8d8;
+    --silver: #c8c0b0;
+    --gold: #c9a84c;
+    --rust: #8b3a2a;
+    --text: #e8e0d0;
+    --strip: #1a1510;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* ─── CUSTOM CURSOR ─── */
+  .cursor {
+    position: fixed;
+    width: 20px; height: 20px;
+    border: 1.5px solid var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: difference;
+  }
+  .cursor.grow { width: 40px; height: 40px; background: rgba(201,168,76,0.15); }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.4;
+  }
+
+  /* ══════════════════════════════════════════
+     SECTION 1 – HERO
+  ══════════════════════════════════════════ */
+  #hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-lines {
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(201,168,76,0.04) 60px, rgba(201,168,76,0.04) 61px),
+      repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(201,168,76,0.04) 60px, rgba(201,168,76,0.04) 61px);
+  }
+
+  .hero-center {
+    position: relative;
+    width: 600px; height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    overflow: visible;
+  }
+
+  .curved-text {
+    font-family: 'Courier Prime', monospace;
+    font-size: 38px;
+    font-weight: 700;
+    fill: var(--gold);
+    letter-spacing: 10px;
+    text-transform: uppercase;
+  }
+
+  .hero-word {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(80px, 13vw, 160px);
+    font-weight: 900;
+    color: var(--cream);
+    letter-spacing: -2px;
+    line-height: 1;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    user-select: none;
+  }
+
+  .hero-word span {
+    display: block;
+    font-size: 0.38em;
+    font-family: 'Courier Prime', monospace;
+    font-weight: 400;
+    color: var(--silver);
+    letter-spacing: 12px;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .shutter-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.2);
+    animation: spinRing 20s linear infinite;
+  }
+  .shutter-ring:nth-child(1) { width: 320px; height: 320px; animation-duration: 25s; }
+  .shutter-ring:nth-child(2) { width: 420px; height: 420px; animation-duration: 35s; animation-direction: reverse; border-style: dashed; }
+  .shutter-ring:nth-child(3) { width: 520px; height: 520px; animation-duration: 45s; border-color: rgba(201,168,76,0.08); }
+
+  @keyframes spinRing {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .hero-scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--silver);
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    opacity: 0.6;
+  }
+  .hero-scroll-hint::after {
+    content: '';
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollLine 1.5s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0%, 100% { opacity: 0; transform: scaleY(0); transform-origin: top; }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+
+  /* ══════════════════════════════════════════
+     SECTION 2 – ABOUT ME (CAMERA)
+  ══════════════════════════════════════════ */
+  #about {
+    min-height: 350vh;
+    position: relative;
+  }
+
+  .about-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+  }
+
+  .about-title {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    opacity: 0.8;
+  }
+
+  /* Camera body */
+  .camera-wrap {
+    position: relative;
+    width: 360px; height: 280px;
+  }
+
+  .camera-body {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #1e1e1e 0%, #111 60%, #0d0d0d 100%);
+    border-radius: 24px;
+    border: 1.5px solid #2a2a2a;
+    box-shadow:
+      0 0 0 1px #333,
+      inset 0 1px 0 rgba(255,255,255,0.07),
+      0 30px 80px rgba(0,0,0,0.8);
+  }
+
+  /* Camera top bump */
+  .camera-bump {
+    position: absolute;
+    top: -22px; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 30px;
+    background: linear-gradient(to bottom, #1a1a1a, #111);
+    border-radius: 8px 8px 0 0;
+    border: 1.5px solid #2a2a2a;
+    border-bottom: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .camera-bump-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #222;
+    border: 1px solid #333;
+  }
+  .camera-bump-dot.red { background: #8b3a2a; box-shadow: 0 0 6px #8b3a2a; }
+
+  /* Lens */
+  .camera-lens-outer {
+    position: absolute;
+    top: 50%; left: 40%;
+    transform: translate(-50%, -50%);
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: conic-gradient(#1a1a1a 0deg, #333 30deg, #1a1a1a 60deg, #333 90deg, #1a1a1a 120deg, #333 150deg, #1a1a1a 180deg, #333 210deg, #1a1a1a 240deg, #333 270deg, #1a1a1a 300deg, #333 330deg, #1a1a1a 360deg);
+    box-shadow: 0 0 0 3px #0a0a0a, 0 0 0 5px #2a2a2a, 0 0 30px rgba(0,0,0,0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .camera-lens-mid {
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #1a2a3a, #050810 70%);
+    border: 2px solid #0d1520;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 30px rgba(0,0,40,0.8), 0 0 20px rgba(0,0,0,0.5);
+  }
+
+  .camera-lens-glass {
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 32%, rgba(60,90,140,0.6), rgba(5,8,20,0.95) 65%);
+    border: 1px solid rgba(100,130,180,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .camera-lens-glass::after {
+    content: '';
+    position: absolute;
+    top: 12%; left: 15%;
+    width: 35%; height: 30%;
+    background: radial-gradient(ellipse, rgba(200,220,255,0.18), transparent 70%);
+    border-radius: 50%;
+    transform: rotate(-30deg);
+    pointer-events: none;
+  }
+
+  .lens-photo {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    filter: saturate(0.7) contrast(1.1);
+    opacity: 0.92;
+  }
+
+  /* Photo placeholder */
+  .lens-photo-placeholder {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1a2535, #0d1520);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--silver);
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-align: center;
+    border: 1px solid rgba(100,130,180,0.15);
+  }
+  .lens-photo-placeholder svg {
+    opacity: 0.4;
+  }
+
+  /* Camera right panel */
+  .camera-right-panel {
+    position: absolute;
+    top: 20px; right: 16px; bottom: 20px;
+    width: 80px;
+    background: linear-gradient(180deg, #161616, #0f0f0f);
+    border-radius: 10px;
+    border: 1px solid #222;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 10px;
+  }
+
+  .dial {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: conic-gradient(#2a2a2a, #3a3a3a 45deg, #222 90deg, #333 135deg, #2a2a2a 180deg, #1a1a1a 225deg, #2a2a2a 270deg, #333 315deg, #2a2a2a 360deg);
+    border: 2px solid #1a1a1a;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    position: relative;
+  }
+  .dial::after {
+    content: '';
+    position: absolute;
+    top: 4px; left: 50%; transform: translateX(-50%);
+    width: 3px; height: 8px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+
+  .shutter-btn {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #888, #555);
+    border: 2px solid #3a3a3a;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  .shutter-btn:hover { transform: scale(0.95); }
+  .shutter-btn:active { transform: scale(0.9); }
+
+  /* Viewfinder tiny */
+  .viewfinder {
+    width: 36px; height: 24px;
+    border-radius: 3px;
+    background: #0a0f18;
+    border: 1px solid #2a2a2a;
+    box-shadow: inset 0 0 8px rgba(0,0,20,0.8);
+  }
+
+  /* Camera bottom label */
+  .camera-label {
+    position: absolute;
+    bottom: 16px; left: 20px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: var(--silver);
+    opacity: 0.4;
+    text-transform: uppercase;
+  }
+
+  /* ─── ABOUT SCENE ─── */
+  .about-scene {
+    position: relative;
+    width: min(960px, 96vw);
+    height: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+  }
+
+  /* 4 orbit circles */
+  .orbit-circle {
+    position: absolute;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(201,168,76,0.35);
+    background: rgba(201,168,76,0.04);
+    box-shadow: 0 0 0 6px rgba(201,168,76,0.04), inset 0 0 20px rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    transition: border-color 0.4s, box-shadow 0.4s;
+  }
+  .orbit-circle.filled {
+    border-color: rgba(201,168,76,0.7);
+    box-shadow: 0 0 0 6px rgba(201,168,76,0.08), 0 0 30px rgba(201,168,76,0.15), inset 0 0 20px rgba(0,0,0,0.6);
+  }
+  .orbit-circle-num {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(201,168,76,0.3);
+    transition: opacity 0.3s;
+  }
+  .orbit-circle.filled .orbit-circle-num { opacity: 0; }
+
+  /* Dashed connector lines from camera to each circle */
+  .connectors-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: visible;
+  }
+  .connector-line {
+    stroke: rgba(201,168,76,0.12);
+    stroke-width: 1;
+    stroke-dasharray: 4 6;
+    fill: none;
+    transition: stroke 0.4s;
+  }
+  .connector-line.active {
+    stroke: rgba(201,168,76,0.3);
+    stroke-dasharray: 4 4;
+    animation: dashMove 1.5s linear infinite;
+  }
+  @keyframes dashMove {
+    to { stroke-dashoffset: -20; }
+  }
+
+  /* INFO CARDS — circular, matches orbit circles */
+  .info-card {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 32%, rgba(201,168,76,0.12), rgba(10,8,4,0.97) 70%);
+    border: 1.5px solid rgba(201,168,76,0.7);
+    box-shadow:
+      0 0 0 6px rgba(201,168,76,0.08),
+      0 0 30px rgba(201,168,76,0.18),
+      inset 0 0 20px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    opacity: 0;
+    pointer-events: none;
+    backdrop-filter: blur(12px);
+    z-index: 10;
+    text-align: center;
+    padding: 12px;
+    /* Start at lens center */
+    transform: translate(-50%, -50%) scale(0.1);
+    transform-origin: center center;
+    /* Subtle shimmer on the rim */
+    overflow: hidden;
+  }
+  .info-card::before {
+    content: '';
+    position: absolute;
+    top: 8%; left: 15%;
+    width: 35%; height: 20%;
+    background: radial-gradient(ellipse, rgba(255,240,180,0.15), transparent 70%);
+    border-radius: 50%;
+    transform: rotate(-30deg);
+    pointer-events: none;
+  }
+  .info-card.visible { pointer-events: all; }
+
+  .info-card-icon {
+    font-size: 30px;
+    display: block;
+    line-height: 1;
+  }
+  .info-card-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    display: block;
+    opacity: 0.8;
+    line-height: 1;
+  }
+  .info-card-value {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--cream);
+    line-height: 1.3;
+  }
+
+  /* About progress bar */
+  .about-progress {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+  }
+  .about-progress-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--silver);
+    opacity: 0.3;
+    transition: opacity 0.3s, background 0.3s;
+  }
+  .about-progress-dot.active { opacity: 1; background: var(--gold); }
+
+  /* ══════════════════════════════════════════
+     SECTION 3 – ACHIEVEMENTS (FILM STRIP)
+  ══════════════════════════════════════════ */
+  #achievements {
+    padding: 120px 0 0;
+    overflow: hidden;
+  }
+
+  .section-header {
+    padding: 0 60px 60px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .section-eyebrow {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 900;
+    color: var(--cream);
+    line-height: 1;
+  }
+
+  .section-count {
+    font-family: 'Courier Prime', monospace;
+    font-size: 60px;
+    font-weight: 700;
+    color: rgba(201,168,76,0.12);
+    line-height: 1;
+  }
+
+  /* Film Strip */
+  .film-strip-wrapper {
+    position: relative;
+    overflow: hidden;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .film-strip-wrapper:active { cursor: grabbing; }
+  /* Kill browser native drag on every child so no ghost image appears */
+  .film-strip-wrapper * {
+    -webkit-user-drag: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .film-strip {
+    display: flex;
+    gap: 0;
+    padding: 0;
+    width: max-content;
+  }
+
+  .film-hole-row {
+    display: flex;
+    gap: 0;
+    width: max-content;
+    background: var(--strip);
+    padding: 10px 0;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .film-segment {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--strip);
+    border-right: 1px solid #0a0a0a;
+  }
+
+  .film-holes {
+    display: flex;
+    gap: 14px;
+    padding: 10px 20px;
+    background: var(--strip);
+    border-bottom: 2px solid #000;
+  }
+  .film-holes.bottom { border-bottom: none; border-top: 2px solid #000; }
+
+  .hole {
+    width: 14px; height: 14px;
+    border-radius: 2px;
+    background: var(--black);
+    border: 1px solid #050505;
+    flex-shrink: 0;
+  }
+
+  .film-frame-link {
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+    flex: 1;
+  }
+
+  .film-frame {
+    position: relative;
+    width: 420px;
+    height: 560px;
+    background: #080808;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+  }
+  .film-frame-link:hover .film-frame { transform: scaleY(1.015); }
+
+  .film-frame-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: saturate(0.5) contrast(1.1);
+    transition: filter 0.4s ease;
+  }
+  .film-frame-link:hover .film-frame-img { filter: saturate(1) contrast(1.05); transform: scale(1.05); }
+
+  .film-frame-placeholder {
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: linear-gradient(160deg, #0f0f0f, #080808);
+  }
+  .film-frame-placeholder-icon {
+    font-size: 28px;
+    opacity: 0.3;
+  }
+  .film-frame-placeholder-text {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--silver);
+    opacity: 0.4;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 0 20px;
+  }
+
+  .film-frame-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.2) 45%, transparent 68%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 28px 22px;
+    pointer-events: none;
+  }
+  .film-frame-link:hover .film-frame-overlay { opacity: 1; }
+
+  .film-frame-cta {
+    position: absolute;
+    top: 12px; right: 14px;
+    width: 34px; height: 34px;
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(6px);
+  }
+  .film-frame-link:hover .film-frame-cta { opacity: 1; transform: scale(1); }
+
+  .film-frame-desc {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: rgba(232,224,208,0.65);
+    line-height: 1.6;
+    margin-top: 4px;
+  }
+
+  .film-frame-placeholder-hint {
+    font-family: 'Courier Prime', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    opacity: 0.35;
+    text-transform: uppercase;
+    border: 1px dashed rgba(201,168,76,0.2);
+    padding: 5px 10px;
+    border-radius: 2px;
+  }
+
+  .film-frame-number {
+    position: absolute;
+    top: 8px; left: 12px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    color: rgba(201,168,76,0.6);
+    letter-spacing: 2px;
+  }
+
+  .film-frame-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 4px;
+  }
+
+  .film-frame-sub {
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  /* Drag instruction */
+  .drag-hint {
+    text-align: center;
+    padding: 30px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--silver);
+    opacity: 0.4;
+    text-transform: uppercase;
+  }
+
+  /* ══════════════════════════════════════════
+     SECTION 4 – FOOTER
+  ══════════════════════════════════════════ */
+  #footer {
+    margin-top: 120px;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    padding: 80px 60px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #footer::before {
+    content: 'DMP';
+    position: absolute;
+    bottom: -30px; right: -10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 200px;
+    font-weight: 900;
+    color: rgba(201,168,76,0.03);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 80px;
+  }
+
+  .footer-brand {
+    grid-column: 1;
+  }
+
+  .footer-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--cream);
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .footer-tagline {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0.7;
+  }
+
+  .footer-bio {
+    font-size: 13px;
+    color: var(--silver);
+    line-height: 1.7;
+    opacity: 0.7;
+    max-width: 260px;
+  }
+
+  .footer-col-title {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0.6;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer-links a {
+    color: var(--silver);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .footer-links a::before {
+    content: '';
+    width: 16px; height: 1px;
+    background: var(--gold);
+    opacity: 0.4;
+    transition: width 0.2s, opacity 0.2s;
+  }
+  .footer-links a:hover { color: var(--cream); }
+  .footer-links a:hover::before { width: 28px; opacity: 1; }
+
+  .contact-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 20px;
+  }
+  .contact-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+  .contact-value {
+    font-size: 14px;
+    color: var(--silver);
+  }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .footer-copy {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--silver);
+    opacity: 0.3;
+    text-transform: uppercase;
+  }
+
+  .footer-social {
+    display: flex;
+    gap: 20px;
+  }
+  .footer-social a {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--silver);
+    text-decoration: none;
+    font-size: 13px;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .footer-social a:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(201,168,76,0.08);
+  }
+
+  /* ─── SHUTTER FLASH ─── */
+  .shutter-flash {
+    position: fixed;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9997;
+  }
+
+
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-brand { grid-column: 1 / -1; }
+    .section-header { padding: 0 30px 40px; flex-direction: column; align-items: flex-start; gap: 10px; }
+    #footer { padding: 60px 30px 40px; }
+    .camera-wrap { transform: scale(0.85); }
+  }
+
+  /* Flash effect animation */
+  @keyframes shutterFlash {
+    0% { opacity: 0; }
+    10% { opacity: 0.7; }
+    100% { opacity: 0; }
+  }
+
+</style>
+</head>
+<body>
+
+
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+
+<!-- Shutter flash -->
+<div class="shutter-flash" id="shutterFlash"></div>
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-bg-lines"></div>
+
+  <div class="hero-center">
+    <!-- Decorative rings -->
+    <div class="shutter-ring"></div>
+    <div class="shutter-ring"></div>
+    <div class="shutter-ring"></div>
+
+    <!-- SVG for curved text -->
+    <svg class="hero-svg" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Top arc — bigger radius so larger text fits -->
+        <path id="topArc" d="M 30,300 A 270,270 0 0,1 570,300" fill="none"/>
+        <!-- Bottom arc -->
+        <path id="bottomArc" d="M 570,300 A 270,270 0 0,1 30,300" fill="none"/>
+      </defs>
+      <text class="curved-text">
+        <textPath href="#topArc" startOffset="50%" text-anchor="middle">
+          DOAN MINH PHUONG
+        </textPath>
+      </text>
+      <text class="curved-text" style="letter-spacing:10px; font-size:16px; fill:rgba(200,192,176,0.5)">
+        <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">
+          DOAN MINH PHUONG
+        </textPath>
+      </text>
+    </svg>
+
+    <!-- Center word -->
+    <div class="hero-word" id="heroWord">
+      Portfolio
+    </div>
+  </div>
+
+  <div class="hero-scroll-hint">Scroll to explore</div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     ABOUT ME
+══════════════════════════════════════ -->
+<section id="about">
+  <div class="about-sticky" id="aboutSticky">
+    <div class="about-title">/ 01 — About Me</div>
+
+    <!-- Full scene: camera + 4 orbit circles + cards -->
+    <div class="about-scene" id="aboutScene">
+
+      <!-- SVG connectors (drawn by JS) -->
+      <svg class="connectors-svg" id="connectorsSvg"></svg>
+
+      <!-- 4 orbit circles -->
+      <div class="orbit-circle" id="oc0" style="top:30px; left:30px;"><span class="orbit-circle-num">01</span></div>
+      <div class="orbit-circle" id="oc1" style="top:30px; right:30px;"><span class="orbit-circle-num">02</span></div>
+      <div class="orbit-circle" id="oc2" style="bottom:30px; left:30px;"><span class="orbit-circle-num">03</span></div>
+      <div class="orbit-circle" id="oc3" style="bottom:30px; right:30px;"><span class="orbit-circle-num">04</span></div>
+
+      <!-- Info cards (all start at lens center, fly to circles via JS) -->
+      <div class="info-card" id="card0">
+        <span class="info-card-icon">🎓</span>
+        <span class="info-card-label">Education</span>
+        <div class="info-card-value">Wellspring</div>
+      </div>
+      <div class="info-card" id="card1">
+        <span class="info-card-icon">❤</span>
+        <span class="info-card-label">Favourite Quotes</span>
+        <div class="info-card-value">We cannot solve our problems with the same thinking we used when we created them”
+ - Albert Einstein</div>
+      </div>
+      <div class="info-card" id="card2">
+        <span class="info-card-icon">🎨</span>
+        <span class="info-card-label">Interest</span>
+        <div class="info-card-value">Photography · Design</div>
+      </div>
+      <div class="info-card" id="card3">
+        <span class="info-card-icon">✨</span>
+        <span class="info-card-label">Core Values</span>
+        <div class="info-card-value">Resilience · Self confidence · <Menu:toolbar></Menu:toolbar>ental growth
+</div>
+      </div>
+
+      <!-- The Camera -->
+      <div class="camera-wrap" id="cameraWrap" style="position:relative; z-index:5;">
+        <div class="camera-body">
+          <div class="camera-bump">
+            <div class="camera-bump-dot"></div>
+            <div class="camera-bump-dot red"></div>
+            <div class="camera-bump-dot"></div>
+          </div>
+
+          <!-- Lens -->
+          <div class="camera-lens-outer">
+            <div class="camera-lens-mid">
+              <div class="camera-lens-glass">
+                <img class="lens-photo" src="images/aodai.JPG" alt="Doan Minh Phuong">
+              </div>
+            </div>
+          </div>
+
+          <!-- Right panel -->
+          <div class="camera-right-panel">
+            <div class="viewfinder"></div>
+            <div class="dial"></div>
+            <button class="shutter-btn" onclick="triggerShutter()"></button>
+          </div>
+
+          <div class="camera-label">LEICA DMP — f/1.4 — ∞</div>
+        </div>
+      </div>
+
+    </div><!-- /about-scene -->
+
+    <!-- Scroll progress dots -->
+    <div class="about-progress" style="margin-top:30px;">
+      <div class="about-progress-dot active" id="dot0"></div>
+      <div class="about-progress-dot" id="dot1"></div>
+      <div class="about-progress-dot" id="dot2"></div>
+      <div class="about-progress-dot" id="dot3"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     ACHIEVEMENTS
+══════════════════════════════════════ -->
+<section id="achievements">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">/ 02 — Film Roll</div>
+      <div class="section-title">Achievements<br/>&amp; Projects</div>
+    </div>
+    <div class="section-count">06</div>
+  </div>
+
+  <div class="film-strip-wrapper" id="filmWrapper">
+    <div class="film-strip" id="filmStrip">
+
+      <!-- ═══ FRAME 1 ═══
+           To add image: replace the placeholder div with
+           <img class="film-frame-img" src="your-photo.jpg" alt="Project name">
+      -->
+      <div class="film-segment">
+        <div class="film-holes">
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        </div>
+        <a class="film-frame-link" href="achpro.html">
+          <div class="film-frame">
+            <img class="film-frame-img" src="images/hero1.JPG" alt="Project name">
+            <div class="film-frame-number">▲ 01</div>
+            <div class="film-frame-cta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+            <div class="film-frame-overlay">
+              <div class="film-frame-sub">Achievements</div>
+              <div class="film-frame-title">HONORS AND AWARDS</div>
+            </div>
+          </div>
+        </a>
+        <div class="film-holes bottom">
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        </div>
+      </div>
+
+      <!-- ═══ FRAME 2 ═══ -->
+      <div class="film-segment">
+        <div class="film-holes">
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        </div>
+        <a class="film-frame-link" href="achpro2.html">
+          <div class="film-frame">
+          <img class="film-frame-img" src="images/hero2.JPG" alt="Project name">
+            <div class="film-frame-number">▲ 02</div>
+            <div class="film-frame-cta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+            <div class="film-frame-overlay">
+              <div class="film-frame-sub">Project</div>
+              <div class="film-frame-title">SCIENCE AND PASSION - S.A.P </div>
+            </div>
+          </div>
+        </a>
+        <div class="film-holes bottom">
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        </div>
+      </div>
+
+      <!-- ═══ FRAME 3 ═══ -->
+      <div class="film-segment">
+        <div class="film-holes">
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        </div>
+        <a class="film-frame-link" href="achpro3.html">
+          <div class="film-frame">
+          <img class="film-frame-img" src="images/wsc.PNG" alt="Project name">
+            <div class="film-frame-number">▲ 03</div>
+            <div class="film-frame-cta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+            <div class="film-frame-overlay">
+              <div class="film-frame-sub">Project</div>
+              <div class="film-frame-title">WELLSPRING STUDENT COUNCIL - WSC</div>
+            </div>
+          </div>
+        </a>
+        <div class="film-holes bottom">
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        </div>
+      </div>
+
+      <!-- ═══ FRAME 4 ═══ -->
+      <div class="film-segment">
+        <div class="film-holes">
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        </div>
+        <a class="film-frame-link" href="achpro4.html">
+          <div class="film-frame">
+          <img class="film-frame-img" src="images/whc.jpg" alt="Project name">
+            <div class="film-frame-number">▲ 04</div>
+            <div class="film-frame-cta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+            <div class="film-frame-overlay">
+              <div class="film-frame-sub">Project</div>
+              <div class="film-frame-title">WELLSPRING HEART CLUB - WHC</div>
+            </div>
+          </div>
+        </a>
+        <div class="film-holes bottom">
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        </div>
+      </div>
+
+      <!-- ═══ FRAME 5 ═══ -->
+      <div class="film-segment">
+        <div class="film-holes">
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        </div>
+        <a class="film-frame-link" href="achpro5.html">
+          <div class="film-frame">
+          <img class="film-frame-img" src="images/vmu.jpg" alt="Project name">
+            <div class="film-frame-number">▲ 05</div>
+            <div class="film-frame-cta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+            <div class="film-frame-overlay">
+              <div class="film-frame-sub">Project</div>
+              <div class="film-frame-title">“Vì Mơ Ước” Project</div>
+            </div>
+          </div>
+        </a>
+        <div class="film-holes bottom">
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        </div>
+      </div>
+      <!-- End of roll -->
+      <div class="film-segment">
+        <div class="film-holes">
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        </div>
+        <div class="film-frame" style="background:#050505; cursor:default;">
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+            <div style="font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:4px;color:rgba(201,168,76,0.25);text-transform:uppercase;text-align:center;line-height:3;">
+              End of Roll<br/>— More to Come —
+            </div>
+          </div>
+        </div>
+        <div class="film-holes bottom">
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+          <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="drag-hint">← Drag to explore &nbsp;·&nbsp; Click frame to view project →</div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer id="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="footer-name">Doan<br/>Minh Phuong</div>
+      <div class="footer-tagline">Portfolio · 2026</div>
+    </div>
+
+    <div>
+      <div class="footer-col-title">Navigation</div>
+      <ul class="footer-links">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#about">About Me</a></li>
+        <li><a href="#achievements">Projects</a></li>
+        <li><a href="#footer">Contact</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer-col-title">Get In Touch</div>
+      <div class="contact-item">
+        <span class="contact-label">Email</span>
+        <span class="contact-value">doann.minhphuong@gmail.com</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Phone Number</span>
+        <span class="contact-value">+84 082 2266929</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Doan Minh Phuong — All Rights Reserved</div>
+    <div class="footer-social">
+      <a href="#" title="LinkedIn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46C23.21 24 24 23.23 24 22.28V1.72C24 .77 23.21 0 22.23 0z"/>
+        </svg>
+      </a>
+      <a href="#" title="Instagram">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+        </svg>
+      </a>
+      <a href="#" title="Facebook">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.514c-1.491 0-1.956.93-1.956 1.886v2.269h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+
+
+<script>
+  gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+
+  /* ─── Cursor ─── */
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.15, ease: 'power2.out' });
+  });
+  document.querySelectorAll('a, button, .film-frame, .shutter-btn').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+  });
+
+  /* ─── Hero Animation ─── */
+  (function initHeroAnimation() {
+    gsap.timeline()
+      .from('#heroWord', { opacity: 0, scale: 0.8, duration: 1, ease: 'back.out(1.4)' })
+      .from('.hero-scroll-hint', { opacity: 0, y: 20, duration: 0.6 }, '-=0.3')
+      .from('.shutter-ring', { scale: 0, opacity: 0, duration: 1.2, stagger: 0.15, ease: 'power3.out' }, 0);
+    gsap.to('.hero-center', {
+      y: -80,
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 }
+    });
+  })();
+
+  /* ─── About Me ─── */
+  (function initAboutScene() {
+    const scene  = document.getElementById('aboutScene');
+    const svgEl  = document.getElementById('connectorsSvg');
+    const cards  = Array.from(document.querySelectorAll('.info-card'));
+    const dots   = Array.from(document.querySelectorAll('.about-progress-dot'));
+    const circles = Array.from(document.querySelectorAll('.orbit-circle'));
+
+    const sceneW = scene.offsetWidth;
+    const sceneH = scene.offsetHeight;
+
+    // Circle centers in scene space (circle size 200px, offset 30px from edges)
+    const targets = [
+      { x: 130,         y: 130          },
+      { x: sceneW - 130, y: 130          },
+      { x: 130,         y: sceneH - 130 },
+      { x: sceneW - 130, y: sceneH - 130 },
+    ];
+
+    // Camera is 360x280 flex-centered in scene; lens at 40% left, 50% top of camera
+    const camW = 360, camH = 280;
+    const lensX = (sceneW - camW) / 2 + camW * 0.40;
+    const lensY = (sceneH - camH) / 2 + camH * 0.50;
+
+    // SVG connectors
+    svgEl.setAttribute('viewBox', `0 0 ${sceneW} ${sceneH}`);
+    svgEl.innerHTML = '';
+    const lines = targets.map((t, i) => {
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', lensX); line.setAttribute('y1', lensY);
+      line.setAttribute('x2', t.x);   line.setAttribute('y2', t.y);
+      line.setAttribute('class', 'connector-line');
+      svgEl.appendChild(line);
+      return line;
+    });
+
+    // Start all cards at lens center, invisible
+    cards.forEach(card => {
+      gsap.set(card, { left: lensX, top: lensY, xPercent: -50, yPercent: -50, scale: 0.1, opacity: 0 });
+    });
+
+    let last = -1;
+    ScrollTrigger.create({
+      trigger: '#about',
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate(self) {
+        const n = Math.min(4, Math.floor(self.progress * 5));
+        if (n === last) return;
+        last = n;
+        cards.forEach((card, i) => {
+          if (i < n) {
+            gsap.to(card, { left: targets[i].x, top: targets[i].y, scale: 1, opacity: 1, duration: 0.65, ease: 'back.out(1.5)', overwrite: true });
+            lines[i].classList.add('active');
+            circles[i].classList.add('filled');
+            if (dots[i]) dots[i].classList.add('active');
+          } else {
+            gsap.to(card, { left: lensX, top: lensY, scale: 0.1, opacity: 0, duration: 0.3, ease: 'power2.in', overwrite: true });
+            lines[i].classList.remove('active');
+            circles[i].classList.remove('filled');
+            if (dots[i]) dots[i].classList.remove('active');
+          }
+        });
+      }
+    });
+  })();
+
+  window.addEventListener('resize', () => {
+    ScrollTrigger.getAll().forEach(t => t.kill());
+    location.reload();
+  });
+
+  /* ─── Film Strip Drag ─── */
+  (function() {
+    const wrap  = document.getElementById('filmWrapper');
+    const strip = document.getElementById('filmStrip');
+    let drag = false, sx = 0, ox = 0, moved = false;
+
+    wrap.addEventListener('mousedown', e => {
+      drag  = true;
+      moved = false;
+      sx    = e.pageX;
+      ox    = gsap.getProperty(strip, 'x') || 0;
+      wrap.style.cursor = 'grabbing';
+      e.preventDefault(); // prevents browser ghost-image drag on links/images
+    });
+
+    window.addEventListener('mousemove', e => {
+      if (!drag) return;
+      const delta = e.pageX - sx;
+      if (Math.abs(delta) > 3) moved = true;
+      let nx = ox + delta * 1.2;
+      nx = Math.max(-(strip.scrollWidth - wrap.clientWidth), Math.min(0, nx));
+      gsap.to(strip, { x: nx, duration: 0.12, ease: 'power2.out' });
+    });
+
+    window.addEventListener('mouseup', () => {
+      drag = false;
+      wrap.style.cursor = 'grab';
+    });
+
+    // Only fire link if user didn't drag — capture phase so it runs first
+    wrap.addEventListener('click', e => {
+      if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
+    }, true);
+
+    // Touch
+    wrap.addEventListener('touchstart', e => {
+      sx    = e.touches[0].pageX;
+      ox    = gsap.getProperty(strip, 'x') || 0;
+      moved = false;
+    }, { passive: true });
+    wrap.addEventListener('touchmove', e => {
+      moved = true;
+      let nx = ox + (e.touches[0].pageX - sx) * 1.2;
+      nx = Math.max(-(strip.scrollWidth - wrap.clientWidth), Math.min(0, nx));
+      gsap.to(strip, { x: nx, duration: 0.1, ease: 'none' });
+    }, { passive: true });
+
+    gsap.from(strip, { x: 60, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '#achievements', start: 'top 80%' } });
+  })();
+
+  /* ─── Footer ─── */
+  gsap.from('.footer-brand, .footer-grid > div', {
+    y: 40, opacity: 0, duration: 0.8, stagger: 0.15, ease: 'power3.out',
+    scrollTrigger: { trigger: '#footer', start: 'top 85%' }
+  });
+
+  /* ─── Shutter ─── */
+  window.triggerShutter = function() {
+    const flash = document.getElementById('shutterFlash');
+    gsap.fromTo(flash, { opacity: 0 }, { opacity: 0.7, duration: 0.08, yoyo: true, repeat: 1 });
+    gsap.to('#cameraWrap', { y: -4, duration: 0.05, yoyo: true, repeat: 3, ease: 'power1.inOut' });
+  };
+</script>
+</body>
+</html>

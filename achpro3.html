@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Project 03 — Doan Minh Phuong</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Courier+Prime:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+:root {
+  --black:#0a0a0a; --off:#0f0f0f; --cream:#f0e8d8;
+  --silver:#c8c0b0; --gold:#c9a84c; --muted:rgba(232,224,208,.55);
+  --line:rgba(201,168,76,.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--cream);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.45}
+img{display:block;max-width:100%}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:22px 52px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(10,10,10,.92) 60%,transparent);backdrop-filter:blur(10px)}
+.nav-back{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--silver);transition:color .2s}
+.nav-back:hover{color:var(--gold)}
+.nav-back:hover .nav-arrow{transform:translateX(-5px)}
+.nav-arrow{transition:transform .25s ease}
+.nav-label{font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:4px;color:rgba(201,168,76,.45)}
+
+/* ① HERO */
+.hero{position:relative;height:100vh;min-height:600px;display:flex;align-items:flex-end;overflow:hidden}
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.38) saturate(.6)}
+.hero-placeholder{position:absolute;inset:0;background:linear-gradient(135deg,#0e0e0e,#141410);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+.hero-placeholder-icon{font-size:56px;opacity:.12}
+.hero-placeholder-label{font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--silver);opacity:.3}
+.hero-placeholder-hint{font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:.3;border:1px dashed rgba(201,168,76,.18);padding:6px 14px;border-radius:2px}
+.hero-gradient{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,1) 0%,rgba(10,10,10,.65) 35%,rgba(10,10,10,.1) 70%,transparent 100%)}
+.hero-content{position:relative;z-index:2;width:100%;padding:0 52px 64px}
+.hero-eyebrow{font-family:'Courier Prime',monospace;font-size:18px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);opacity:.85;margin-bottom:18px}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(48px,7.5vw,110px);font-weight:900;line-height:.95;color:var(--cream);margin-bottom:28px;max-width:900px}
+.hero-title em{font-style:italic;color:var(--gold)}
+.hero-tags{display:flex;gap:10px;flex-wrap:wrap}
+.tag{font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,.3);padding:5px 13px;border-radius:2px;background:rgba(201,168,76,.05)}
+.hero-scroll{position:absolute;bottom:28px;right:52px;z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--silver);opacity:.4}
+.hero-scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollpulse 2s ease-in-out infinite}
+@keyframes scrollpulse{0%,100%{opacity:.3;transform:scaleY(1)}50%{opacity:.8;transform:scaleY(1.15)}}
+
+/* ② MY ROLE */
+.role-section{padding:120px 52px;display:grid;grid-template-columns:1fr 420px;gap:80px;align-items:center;border-bottom:1px solid var(--line);max-width:1300px;margin:0 auto}
+.role-heading{font-family:'Playfair Display',serif;font-size:clamp(36px,4.5vw,58px);font-weight:900;color:var(--cream);line-height:1.05;margin-bottom:32px}
+.role-text{font-size:15px;line-height:1.9;color:var(--muted);margin-bottom:20px}
+.role-photo-wrap{position:relative}
+.role-photo-frame{position:relative;aspect-ratio:3/4;overflow:hidden;border-radius:2px}
+.role-photo{width:100%;height:100%;object-fit:cover;filter:saturate(.7);transition:filter .5s,transform .5s}
+.role-photo-frame:hover .role-photo{filter:saturate(1);transform:scale(1.03)}
+.role-photo-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(160deg,#111,#0d0d0d)}
+.role-photo-placeholder-icon{font-size:42px;opacity:.12}
+.role-photo-placeholder-label{font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--silver);opacity:.28}
+.role-photo-placeholder-hint{font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:2px;color:var(--gold);opacity:.28;border:1px dashed rgba(201,168,76,.18);padding:5px 10px;border-radius:2px;text-transform:uppercase}
+.role-photo-wrap::before,.role-photo-wrap::after{content:'';position:absolute;width:28px;height:28px;border-color:var(--gold);border-style:solid;opacity:.35;pointer-events:none}
+.role-photo-wrap::before{top:-8px;left:-8px;border-width:2px 0 0 2px}
+.role-photo-wrap::after{bottom:-8px;right:-8px;border-width:0 2px 2px 0}
+
+/* ③ ACTIVITIES */
+.activities-section{padding:0 0 140px}
+.activities-header{max-width:1300px;margin:0 auto;padding:100px 52px 70px;display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--line)}
+.activities-heading{font-family:'Playfair Display',serif;font-size:clamp(32px,4vw,52px);font-weight:900;color:var(--cream)}
+.activities-count{font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:4px;color:var(--gold);opacity:.5}
+
+.activity{max-width:1300px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;min-height:540px;border-bottom:1px solid var(--line);overflow:hidden}
+.activity.even{direction:rtl}
+.activity.even>*{direction:ltr}
+
+.activity-img-side{position:relative;overflow:hidden}
+.activity-img{width:100%;height:100%;object-fit:cover;filter:saturate(.55) brightness(.85);transition:filter .6s,transform .6s}
+.activity-img-side:hover .activity-img{filter:saturate(.9) brightness(.95);transform:scale(1.03)}
+.activity-img-placeholder{width:100%;height:100%;min-height:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(160deg,#101010,#0c0c0c)}
+.activity-img-placeholder-icon{font-size:40px;opacity:.12}
+.activity-img-placeholder-label{font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--silver);opacity:.25}
+.activity-img-placeholder-hint{font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:2px;color:var(--gold);opacity:.28;border:1px dashed rgba(201,168,76,.18);padding:5px 10px;border-radius:2px;text-transform:uppercase}
+.activity-num{position:absolute;top:20px;left:20px;font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:3px;color:rgba(201,168,76,.5);text-transform:uppercase;background:rgba(0,0,0,.5);padding:4px 10px;border-radius:2px;backdrop-filter:blur(6px)}
+
+.activity-text-side{display:flex;flex-direction:column;justify-content:center;padding:64px;background:var(--off);border-left:1px solid var(--line)}
+.activity.even .activity-text-side{border-left:none;border-right:1px solid var(--line)}
+.activity-kicker{font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);opacity:.7;margin-bottom:18px;display:block}
+.activity-title{font-family:'Playfair Display',serif;font-size:clamp(26px,3vw,42px);font-weight:900;color:var(--cream);line-height:1.1;margin-bottom:24px}
+.activity-desc{font-size:14px;line-height:1.9;color:var(--muted);margin-bottom:16px}
+.activity-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px}
+.activity-tag{font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,.25);padding:4px 11px;border-radius:2px;background:rgba(201,168,76,.04)}
+
+/* BOTTOM NAV */
+.bottom-nav{max-width:1300px;margin:0 auto;padding:50px 52px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line)}
+.bottom-nav a{display:flex;align-items:center;gap:12px;text-decoration:none;font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--silver);transition:color .2s}
+.bottom-nav a:hover{color:var(--gold)}
+.bottom-nav .next-link:hover svg{transform:translateX(5px)}
+.bottom-nav .prev-link:hover svg{transform:translateX(-5px)}
+.bottom-nav svg{transition:transform .2s}
+
+@media(max-width:900px){
+  nav{padding:18px 24px}
+  .hero-content{padding:0 24px 48px}
+  .hero-scroll{right:24px}
+  .role-section{grid-template-columns:1fr;gap:48px;padding:80px 24px}
+  .activities-header{padding:60px 24px 40px}
+  .activity{grid-template-columns:1fr;min-height:auto}
+  .activity.even{direction:ltr}
+  .activity-img-side{min-height:320px}
+  .activity-text-side{padding:44px 24px}
+  .activity.even .activity-text-side{border-right:none;border-top:1px solid var(--line)}
+  .bottom-nav{padding:36px 24px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-back" href="index.html">
+    <svg class="nav-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Back to Portfolio
+  </a>
+  <span class="nav-label">▲ 03 / 05</span>
+</nav>
+
+
+<!-- ① HERO -->
+<section class="hero">
+  <img class="hero-img" src="images/wsc.PNG" alt="Activity">
+  <div class="hero-gradient"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">/ 03 &nbsp;·&nbsp; PROJECT</p>
+    <h1 class="hero-title">WELLSPRING STUDENT COUNCIL - WSC</h1>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+
+<!-- ② MY ROLE -->
+<section>
+  <div class="role-section">
+    <div>
+      <h2 class="role-heading">My Role</h2>
+      <p class="role-text">Observing several marvelous events organized by Wellspring Student Council, I was motivated to join the club for the exclusive experiences and self-development. Being a content member required me to create fresh ideas with their unique color and distinctness, which makes them stand out among others, in order to be selected to launch.</p>
+      <p class="role-text">All of these showcases, based on one core value that we valued during the term, were to create a dynamic space for the students and teachers to connect and enjoy as a break from those tireless periods. </p>
+    </div>
+    <div class="role-photo-wrap">
+      <div class="role-photo-frame">
+        <img class="role-photo" src="images/Role2.JPG" alt="Doan Minh Phuong"> 
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ③ ACTIVITIES — alternating layout -->
+<section class="activities-section">
+
+  <div class="activities-header">
+    <h2 class="activities-heading">Activities &amp;<br/>Highlights</h2>
+    <span class="activities-count">03 Activities</span>
+  </div>
+
+  <!-- Activity 1: image LEFT, text RIGHT -->
+  <div class="activity odd" data-anim>
+    <div class="activity-img-side">
+      <img class="activity-img" src="images/aoc.JPG" alt="Activity 1">
+      <span class="activity-num">▲ 01</span>
+    </div>
+    <div class="activity-text-side">
+      <span class="activity-kicker">First Activity</span>
+      <h3 class="activity-title">“ABYSS OF CHAOS” - Halloween 2024</h3>
+      <p class="activity-desc"> When it comes to Halloween, WSC is known for its enthralling escape rooms displaying a variety of themes. Rather than adhering to dreadful plots like many terms before, we chose a different path by establishing a new topic, discovering the meta-universe called “Into the Multiverse”.</p>
+      <p class="activity-desc">By doing this, students would have a new perspective on the escape room, and especially for elementary </p>
+    </div>
+  </div>
+
+  <!-- Activity 2: text LEFT, image RIGHT -->
+  <div class="activity even" data-anim>
+    <div class="activity-img-side">
+      <img class="activity-img" src="images/sol.JPG" alt="Activity 2">
+      <span class="activity-num">▲ 02</span>
+    </div>
+    <div class="activity-text-side">
+      <span class="activity-kicker">Second Activity</span>
+      <h3 class="activity-title">“Sprouts of Love” - Vietnamese Teachers’ Day</h3>
+      <p class="activity-desc">The name “Sprouts of Love” represented how teachers once were the young sprouts who had become those spreading the sprouts to the next generation, revealing a journey filled with warmth and love. This event included many activities - performances, game shows, workshops - to show students’ appreciation for our respected teachers.</p>
+    </div>
+  </div>
+
+  <!-- Activity 3: image LEFT, text RIGHT -->
+  <div class="activity odd" data-anim>
+    <div class="activity-img-side">
+      <img class="activity-img" src="images/wxr.JPG" alt="Activity 3">
+      <span class="activity-num">▲ 03</span>
+    </div>
+    <div class="activity-text-side">
+      <span class="activity-kicker">Third Activity</span>
+      <h3 class="activity-title">“Soluna Glanz” - Wellspring Avant - Garde Prom</h3>
+      <p class="activity-desc"> Prom is a formal party that is held at the end of the school year, celebrating the culmination of our studies. Still, through prom, we would like to deliver the message that everyone can shine in their own way, like the sun in our universe. From this experience, I have learned how to run a large-scale event, operate with teams effectively, and interact professionally with a number of individuals.</p>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <a class="prev-link" href="achpro2.html">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Back to Previous
+  </a>
+  <a class="next-link" href="achpro4.html">
+    Next Achievement & Project
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+</div>
+
+
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.from('.hero-eyebrow', { opacity:0, y:20, duration:.8, delay:.1, ease:'power3.out' });
+  gsap.from('.hero-title',   { opacity:0, y:40, duration:1,  delay:.2, ease:'power3.out' });
+  gsap.from('.hero-tags',    { opacity:0, y:20, duration:.7, delay:.5, ease:'power3.out' });
+
+  gsap.from('.role-section > div:first-child', {
+    opacity:0, x:-40, duration:.9, ease:'power3.out',
+    scrollTrigger:{ trigger:'.role-section', start:'top 75%' }
+  });
+  gsap.from('.role-photo-wrap', {
+    opacity:0, x:40, duration:.9, delay:.15, ease:'power3.out',
+    scrollTrigger:{ trigger:'.role-section', start:'top 75%' }
+  });
+
+  document.querySelectorAll('.activity[data-anim]').forEach(el => {
+    const isEven = el.classList.contains('even');
+    gsap.from(el.querySelector('.activity-img-side'), {
+      opacity:0, x: isEven ? 60 : -60, duration:.9, ease:'power3.out',
+      scrollTrigger:{ trigger:el, start:'top 78%' }
+    });
+    gsap.from(el.querySelector('.activity-text-side'), {
+      opacity:0, x: isEven ? -60 : 60, duration:.9, delay:.12, ease:'power3.out',
+      scrollTrigger:{ trigger:el, start:'top 78%' }
+    });
+  });
+</script>
+</body>
+</html>
